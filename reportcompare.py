@@ -52,7 +52,11 @@ def compare(urlopenget,urlopenget2):
             continue
     time.sleep(15)
 
-    bodytable = driver.find_element(By.XPATH, '//tbody[@class="table-list__body"]')
+    try:
+        bodytable = driver.find_element(By.XPATH, '//tbody[@class="table-list__body"]')
+    except:
+        print("образец не открылся")
+        return 0
     #print("первый отчет:")
     #print(bodytable.text)
     text1 = bodytable.text
@@ -68,14 +72,19 @@ def compare(urlopenget,urlopenget2):
             continue
     time.sleep(5)
 
-    bodytable2 = driver.find_element(By.XPATH, '//tbody[@class="table-list__body"]')
+    try:
+        bodytable2 = driver.find_element(By.XPATH, '//tbody[@class="table-list__body"]')
+    except:
+        print("тестируемый отчет не открылся")
+        return 0
+    text2 = bodytable2.text
     #print("второй отчет:")
     #print(bodytable2.text)
     text2 = bodytable2.text
-    if bodytable2==bodytable:
-        print('отчеты совпадают')
-    else:
-        print('отчеты не совпадают')
+    #if bodytable2==bodytable:
+    #    print('отчеты совпадают')
+    #else:
+    #    print('отчеты не совпадают')
 
 
 

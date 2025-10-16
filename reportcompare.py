@@ -44,6 +44,7 @@ def compare(urlopenget,urlopenget2):
     while True:
         time.sleep(1)
         try:
+            print("пробуем загрузить первый отчет")
             driver.get(urlopenget)
             break
         except:
@@ -53,6 +54,7 @@ def compare(urlopenget,urlopenget2):
     time.sleep(15)
 
     try:
+        print("пробуем открыть первый отчет")
         bodytable = driver.find_element(By.XPATH, '//tbody[@class="table-list__body"]')
     except:
         print("образец не открылся")
@@ -64,6 +66,7 @@ def compare(urlopenget,urlopenget2):
     while True:
         time.sleep(1)
         try:
+            print("пробуем загрузить второй отчет")
             driver.get(urlopenget2)
             break
         except:
@@ -73,6 +76,7 @@ def compare(urlopenget,urlopenget2):
     time.sleep(5)
 
     try:
+        print("пробуем открыть второй отчет")
         bodytable2 = driver.find_element(By.XPATH, '//tbody[@class="table-list__body"]')
     except:
         print("тестируемый отчет не открылся")

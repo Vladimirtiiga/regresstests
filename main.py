@@ -78,10 +78,23 @@ for i in range(2, N + 1):
     print(report_id)
     ws['K' + str(i)].value = "https://dev2-cloud.smartanalytics.io/ru/#!/index/39/reports/14/"+str(report_id)
     time.sleep(5)
-    while get_status(str(report_id), token)==False:
+    while True:
+        status=get_status(str(report_id), token)
+        if status=="True":
+            break
+        if status == "False":
+            continue
+        if status == 'Error':
+            break
         time.sleep(5)
-    comparestatus = compare(ws['J' + str(i)].value, ws['K' + str(i)].value)
-    ws['L' + str(i)].value = "совпадение "+str(comparestatus)+"%)."
+    if status == "True":
+        comparestatus = compare(ws['J' + str(i)].value, ws['K' + str(i)].value)
+        ws['L' + str(i)].value = "совпадение "+str(comparestatus)+"%)."
+        wb.save('output.xlsx')
+    if status == 'Error':
+        ws['L' + str(i)].value = "ошибка выполнения"
+        wb.save('output.xlsx')
+
 
 
 

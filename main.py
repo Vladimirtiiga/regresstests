@@ -6,9 +6,14 @@ import time
 import os
 import json  # Для парсинга вложенных фрагментов, если нужно
 from cromeget2 import getupdate
+from datetime import datetime, date, time as dt
 getupdate()
 token = os.getenv('tokendev')
-
+dn = datetime.now()
+newname = str(dn.strftime("__%d_%m_%Y__%H_%M__"))
+print(newname)
+newnamecompleate = 'output'+newname+'.xlsx'
+print(newnamecompleate)
 
 # Открываем файл
 wb = load_workbook(filename='autoregress.xlsx', data_only=True)
@@ -90,14 +95,14 @@ for i in range(2, N + 1):
     if status == "True":
         comparestatus = compare(ws['J' + str(i)].value, ws['K' + str(i)].value)
         ws['L' + str(i)].value = "совпадение "+str(comparestatus)+"%)."
-        wb.save('output.xlsx')
+        wb.save(newnamecompleate)
     if status == 'Error':
         ws['L' + str(i)].value = "ошибка выполнения"
-        wb.save('output.xlsx')
+        wb.save(newnamecompleate)
 
 
 
 
 
 
-wb.save('output.xlsx')
+wb.save(newnamecompleate)

@@ -98,6 +98,3 @@ for i in range(2, N + 1):
 
 
 
-
-
-wb.save('output.xlsx')

@@ -1,9 +1,9 @@
 from operator import truediv
 
 import requests
-def get_status(report,token):
-    url = "https://new-dev2-api-stat.smartanalytics.io/api/insight_log/?"
-    #url = "http://dev2-api.smartanalytics.io/api/insights/get_time_cases_by_date/"
+def get_status(report,token, url):
+    #url = "https://new-dev2-api-stat.smartanalytics.io/api/insight_log/?"
+
     headers = {
         "Authorization": "Token "+token,  # Если требуется токен
         "Content-Type": "application/json"

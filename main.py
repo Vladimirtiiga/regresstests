@@ -8,15 +8,28 @@ import json  # Для парсинга вложенных фрагментов, 
 from cromeget2 import getupdate
 from datetime import datetime, date, time as dt
 getupdate()
-token = os.getenv('tokendev')
+server='dev'
+#server='prod'
+if server=='dev':
+    token = os.getenv('tokendev')
+if server == 'prod':
+    token = os.getenv('tokenprod')
 dn = datetime.now()
 newname = str(dn.strftime("__%d_%m_%Y__%H_%M__"))
 print(newname)
-newnamecompleate = 'output'+newname+'.xlsx'
+if server=='dev':
+    newnamecompleate = 'devoutput'+newname+'.xlsx'
+if server == 'prod':
+    newnamecompleate = 'prodoutput'+newname+'.xlsx'
+#newnamecompleate = 'output'+newname+'.xlsx'
 print(newnamecompleate)
 
 # Открываем файл
-wb = load_workbook(filename='autoregress.xlsx', data_only=True)
+if server=='dev':
+    wb = load_workbook(filename='devautoregress.xlsx', data_only=True)
+if server == 'prod':
+    wb = load_workbook(filename='prodautoregress.xlsx', data_only=True)
+#wb = load_workbook(filename='autoregress.xlsx', data_only=True)
 ws = wb.active  # Предполагаем, что данные на активном листе
 
 # Получаем количество строк
@@ -75,16 +88,34 @@ for i in range(2, N + 1):
     print(payload)
 
     #print(params)
-
+    if server == 'dev':
+        baseurl = 'https://dev2-api.smartanalytics.io/api/insights/'
+    if server == 'prod':
+        baseurl = 'https://api.smartanalytics.io/api/insights/'
     valiurl = ws['A' + str(i)].value or ''  # Если None, используем пустую строку
-    urlstart = 'https://dev2-api.smartanalytics.io/api/insights/' +str(valiurl) + '/start/'   # Соединяем текст без пробела
+    urlstart = baseurl + str(valiurl) + '/start/'   # Соединяем текст без пробела
     print(urlstart)
     report_id = test_get_request(urlstart, payload, token)
     print(report_id)
-    ws['K' + str(i)].value = "https://dev2-cloud.smartanalytics.io/ru/#!/index/39/reports/14/"+str(report_id)
+    if server == 'dev':
+        wsbaseurl = "https://dev2-cloud.smartanalytics.io/ru/#!/index/39/reports/14/"
+    if server == 'prod':
+        wsbaseurl = "https://cloud.smartanalytics.io/ru/#!/index/39/reports/14/"
+    ws['K' + str(i)].value = wsbaseurl+str(report_id)
     time.sleep(5)
+    if server == 'dev':
+        urlsstat = "https://new-dev2-api-stat.smartanalytics.io/api/insight_log/?"
+    if server == 'prod':
+        urlsstat = "https://new-api-stat.smartanalytics.io/api/insight_log/?"
+    errorstring = "error"
     while True:
-        status=get_status(str(report_id), token)
+        if errorstring.lower() in str(report_id).lower():
+            print("error")
+            status = 'Error'
+            break
+
+        status=get_status(str(report_id), token, urlsstat)
+
         if status=="True":
             break
         if status == "False":
@@ -93,6 +124,8 @@ for i in range(2, N + 1):
             break
         time.sleep(5)
     if status == "True":
+        print("puse 5 min")
+        time.sleep(300)
         comparestatus = compare(ws['J' + str(i)].value, ws['K' + str(i)].value)
         ws['L' + str(i)].value = "совпадение "+str(comparestatus)+"%)."
         wb.save(newnamecompleate)
